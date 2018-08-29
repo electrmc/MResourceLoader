@@ -83,7 +83,7 @@ static NSString * const ResourceCacheDirName = @"/MResourceCache/";
             NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
             folderSize += [self _fileSizeAtPath:fileAbsolutePath];
         }
-        return folderSize / (1024.0 * 1024.0);
+        return folderSize;
     } else {
         MRLog(@"file is not exist");
         return 0;

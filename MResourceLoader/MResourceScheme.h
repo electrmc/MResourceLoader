@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const MResourceSchemePrefix;
+
 @interface MResourceScheme : NSObject
 
 + (NSURL*)mrSchemeURL:(NSURL*)url;

@@ -8,7 +8,7 @@
 
 #import "MResourceScheme.h"
 
-static NSString * const MResourceSchemePrefix = @"__MResourceScheme__:";
+NSString * const MResourceSchemePrefix = @"__MResourceScheme__:";
 
 @implementation MResourceScheme
 

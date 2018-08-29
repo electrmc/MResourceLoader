@@ -72,7 +72,7 @@ static NSUInteger MaxDataFragmentLength = 204800;
             NSAssert(0, @"Error : data reader read data length is unexpected");
             [self _finishWithError:error];
         }
-        
+        MRLog(@"did read data : %ld",data.length);
         if ([self.delegate respondsToSelector:@selector(dataCreator:didCreateData:)]) {
             [self.delegate dataCreator:self didCreateData:data];
         }
