@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
+                <outlet property="slider" destination="bli-JO-Ubc" id="4zP-Dw-gqF"/>
                 <outlet property="view" destination="iN0-l3-epB" id="KX0-Ac-Rdx"/>
             </connections>
         </placeholder>
@@ -19,17 +20,32 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="eFN-3X-wWN">
-                    <rect key="frame" x="41" y="117" width="30" height="30"/>
+                <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="bli-JO-Ubc">
+                    <rect key="frame" x="14" y="618" width="336" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="load"/>
                     <connections>
-                        <action selector="loadResource:" destination="-1" eventType="touchUpInside" id="90W-Az-FY4"/>
+                        <action selector="slider:" destination="-1" eventType="valueChanged" id="g6Z-t0-KAZ"/>
+                    </connections>
+                </slider>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iMd-uj-dYo">
+                    <rect key="frame" x="88" y="580" width="31" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="stop"/>
+                    <connections>
+                        <action selector="stop:" destination="-1" eventType="touchUpInside" id="DL8-hf-DCt"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="eFN-3X-wWN">
+                    <rect key="frame" x="16" y="580" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="play"/>
+                    <connections>
+                        <action selector="play:" destination="-1" eventType="touchUpInside" id="cMT-cP-XAo"/>
                     </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-            <point key="canvasLocation" x="-118" y="31"/>
+            <point key="canvasLocation" x="-335.5" y="-22.5"/>
         </view>
     </objects>
 </document>

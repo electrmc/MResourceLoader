@@ -16,6 +16,7 @@
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerLayer *playLayer;
 @property (nonatomic, strong) MResourceLoader *loader;
+@property (weak, nonatomic) IBOutlet UISlider *slider;
 @end
 
 @implementation ViewController
@@ -23,10 +24,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    [self _configVideoPlayer];
+    [self _addTimeObserver];
+    [self.player play];
 }
 
-- (IBAction)loadResource:(id)sender {
-    NSURL *url = [NSURL URLWithString:@"http://videoplayer.babytreeimg.com/2018/0718/lrV0B9pCh_b4yEreB-PvX89-bYZw.mp4"];
+- (void)_configVideoPlayer {
+    // https://media.w3.org/2010/05/sintel/trailer.mp4
+    // http://yun.it7090.com/video/XHLaunchAd/video03.mp4
+    // http://www.w3school.com.cn/example/html5/mov_bbb.mp4
+    NSURL *url = [NSURL URLWithString:@"https://media.w3.org/2010/05/sintel/trailer.mp4"];
     url = [MResourceScheme mrSchemeURL:url];
     self.asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     self.loader = [MResourceLoader new];
@@ -35,31 +42,60 @@
     
     self.player = [AVPlayer playerWithPlayerItem:self.playitem];
     self.playLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-    self.playLayer.frame = CGRectMake(0, 200, self.view.bounds.size.width, 400);
+    self.playLayer.frame = CGRectMake(0, 100, self.view.bounds.size.width, 400);
     [self.view.layer addSublayer:self.playLayer];
+}
+
+- (void)_addTimeObserver {
+    [self.playitem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playitem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playitem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playitem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    
+    __weak __typeof__(self) weakSelf = self;
+    [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 100) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        float current = CMTimeGetSeconds(time);
+        NSLog(@"current play time : %f",current);
+        if (current >= 0) {
+            __typeof__(weakSelf) self = weakSelf;
+            self.slider.value = current;
+        }
+    }];
+}
+
+- (IBAction)play:(id)sender {
     [self.player play];
+}
+
+- (IBAction)stop:(id)sender {
+    [self.player pause];
+}
+
+/**
+ first: pause
+ then:  seek to time
+ end :  play
+ */
+- (IBAction)slider:(UISlider*)sender {
+    [self.player seekToTime:CMTimeMake(sender.value, 1)];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"status"]) {
         if (self.playitem.status == AVPlayerItemStatusFailed) {
-            NSLog(@"连接失败");
+            NSLog(@"AVPlayerItemStatusFailed");
         }else if (self.playitem.status == AVPlayerItemStatusUnknown){
-            NSLog(@"未知的错误");
+            NSLog(@"AVPlayerItemStatusUnknown");
         }else if(self.playitem.status == AVPlayerItemStatusReadyToPlay){
-            NSLog(@"准备播放");
+            NSLog(@"AVPlayerItemStatusReadyToPlay");
             CGFloat time = CMTimeGetSeconds(self.playitem.duration);
-            NSLog(@"总时长： %f",time);
+            self.slider.maximumValue = time;
+            NSLog(@"resource duration : %f",time);
         } else {
             NSLog(@"other status");
         }
         
     } else if([keyPath isEqualToString:@"loadedTimeRanges"]) {
-        // 计算缓冲进度
-        NSTimeInterval timeInterval = [self availableDuration];
-        CMTime duration             = self.playitem.duration;
-        CGFloat totalDuration       = CMTimeGetSeconds(duration);
-        NSLog(@"duration : %f, %f",duration.value,duration.timescale);
         
     } else if([keyPath isEqualToString:@"playbackBufferEmpty"]){
         
@@ -70,10 +106,10 @@
 
 - (NSTimeInterval)availableDuration {
     NSArray *loadedTimeRanges = [[_player currentItem] loadedTimeRanges];
-    CMTimeRange timeRange     = [loadedTimeRanges.firstObject CMTimeRangeValue];// 获取缓冲区域
+    CMTimeRange timeRange     = [loadedTimeRanges.firstObject CMTimeRangeValue];
     float startSeconds        = CMTimeGetSeconds(timeRange.start);
     float durationSeconds     = CMTimeGetSeconds(timeRange.duration);
-    NSTimeInterval result     = startSeconds + durationSeconds;// 计算缓冲总进度
+    NSTimeInterval result     = startSeconds + durationSeconds;
     return result;
 }
 
