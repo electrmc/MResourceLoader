@@ -35,13 +35,13 @@
 }
 
 - (void)startCreateDataInRange:(MRRange)range {
-    MRLog(@"fetcher start : %ld range : %lld , %ld",self.hash,range.location,range.length);
+    MRLog(@"fetcher start : %lu range : %lld , %lu",(unsigned long)self.hash,range.location,(unsigned long)range.length);
     _originRange = range;
     self.currentOffset = range.location;
     MResourceSessionManager *sessionManager = [MResourceSessionManager shareSession];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
     request.timeoutInterval = 10.f;
-    
+    request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
     if (range.length > 0) {
         [request addValue:[NSString stringWithFormat:@"bytes=%ld-%ld",(unsigned long)range.location, (unsigned long)MRMaxRange(range)] forHTTPHeaderField:@"Range"];
     }
@@ -88,7 +88,7 @@
     }
     
     MResourceContentInfo *info=  [[MResourceContentInfo alloc]init];
-    info.contentLength = [NSString stringWithFormat:@"%ld",videoLength];
+    info.contentLength = [NSString stringWithFormat:@"%lu",(unsigned long)videoLength];
     info.contentType = CFBridgingRelease(contentType);
     info.byteRangeAccessSupported = YES;
     return info;
