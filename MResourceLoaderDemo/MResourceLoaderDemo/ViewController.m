@@ -10,7 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MResourceLoader.h"
 #import "MResourceCacheManager.h"
-#import "MResourceDataFetcher.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) AVURLAsset *asset;
@@ -19,11 +18,6 @@
 @property (nonatomic, strong) AVPlayerLayer *playLayer;
 @property (nonatomic, strong) MResourceLoader *loader;
 @property (weak, nonatomic) IBOutlet UISlider *slider;
-@property (nonatomic, assign) MRRange range;
-@property (nonatomic, assign) NSUInteger receiveDataLength;
-@property (nonatomic, strong) NSMutableSet *set;
-@property (nonatomic, strong) NSMutableArray *array;
-@property (nonatomic, strong) NSMutableDictionary *dic;
 @end
 
 @implementation ViewController
@@ -31,8 +25,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.receiveDataLength = 0;
-    self.set = [NSMutableSet set];
 }
 
 - (void)_configVideoPlayer {

@@ -31,7 +31,9 @@
 
 /**
  Returns the maxDiskUsage, This size, measured in bytes.
- Change 'maxDiskUsage' can trigger 'clearInvalidCache'
+ This is not close restraint, disk usage may exceed 'maxDiskUsage'.
+ Check disk usage when resource did filled.
+ Change 'maxDiskUsage' can trigger 'clearOlderCache'
  */
 @property (nonatomic, assign) NSUInteger maxDiskUsage;
 
