@@ -109,31 +109,31 @@
 		548E3D82213570B800E85629 /* MResourceLoader */ = {
 			isa = PBXGroup;
 			children = (
-				548E3D83213570B800E85629 /* MResourceSessionManager.m */,
-				548E3D84213570B800E85629 /* MResourceDataFetcher.h */,
-				548E3D85213570B800E85629 /* MResourceUtility.h */,
-				548E3D86213570B800E85629 /* MResourceCacheManager.h */,
 				548E3D87213570B800E85629 /* MResourceLoader.h */,
-				548E3D88213570B800E85629 /* MResourceScheme.m */,
-				548E3D89213570B800E85629 /* MResourceCacher.h */,
-				548E3D8A213570B800E85629 /* MResourceContentInfo.h */,
-				548E3D8B213570B800E85629 /* MResourceFileHandler.m */,
-				548E3D8C213570B800E85629 /* MResourceDataCreator.m */,
-				548E3D8D213570B800E85629 /* NSString+MRResourceUtility.h */,
-				548E3D8E213570B800E85629 /* MResourceDataReader.m */,
-				548E3D8F213570B800E85629 /* MResourceDataFiller.m */,
-				548E3D90213570B800E85629 /* MResourceDataFetcher.m */,
-				548E3D91213570B800E85629 /* MResourceSessionManager.h */,
 				548E3D92213570B800E85629 /* MResourceLoader.m */,
+				548E3D86213570B800E85629 /* MResourceCacheManager.h */,
 				548E3D93213570B800E85629 /* MResourceCacheManager.m */,
-				548E3D94213570B800E85629 /* MResourceDataCreator.h */,
 				548E3D95213570B800E85629 /* MResourceFileHandler.h */,
+				548E3D8B213570B800E85629 /* MResourceFileHandler.m */,
+				548E3D8D213570B800E85629 /* NSString+MRResourceUtility.h */,
+				548E3D99213570B800E85629 /* MResourceDataFiller.h */,
+				548E3D8F213570B800E85629 /* MResourceDataFiller.m */,
+				548E3D84213570B800E85629 /* MResourceDataFetcher.h */,
+				548E3D90213570B800E85629 /* MResourceDataFetcher.m */,
+				548E3D9A213570B800E85629 /* MResourceDataReader.h */,
+				548E3D8E213570B800E85629 /* MResourceDataReader.m */,
+				548E3D91213570B800E85629 /* MResourceSessionManager.h */,
+				548E3D83213570B800E85629 /* MResourceSessionManager.m */,
+				548E3D94213570B800E85629 /* MResourceDataCreator.h */,
+				548E3D8C213570B800E85629 /* MResourceDataCreator.m */,
+				548E3D8A213570B800E85629 /* MResourceContentInfo.h */,
 				548E3D96213570B800E85629 /* MResourceContentInfo.m */,
+				548E3D89213570B800E85629 /* MResourceCacher.h */,
 				548E3D97213570B800E85629 /* MResourceCacher.m */,
 				548E3D98213570B800E85629 /* MResourceScheme.h */,
-				548E3D99213570B800E85629 /* MResourceDataFiller.h */,
-				548E3D9A213570B800E85629 /* MResourceDataReader.h */,
+				548E3D88213570B800E85629 /* MResourceScheme.m */,
 				548E3D9B213570B800E85629 /* NSString+MRResourceUtility.m */,
+				548E3D85213570B800E85629 /* MResourceUtility.h */,
 			);
 			name = MResourceLoader;
 			path = ../../MResourceLoader;
@@ -344,14 +344,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 29994HCM48;
 				INFOPLIST_FILE = MResourceLoaderDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.miaochao.MResourceLoaderDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miaochao.MResourceLoaderDemo1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -361,14 +365,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 29994HCM48;
 				INFOPLIST_FILE = MResourceLoaderDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.miaochao.MResourceLoaderDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miaochao.MResourceLoaderDemo1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

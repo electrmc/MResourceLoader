@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MResourceLoader.h"
+#import "MResourceCacheManager.h"
+#import "MResourceDataFetcher.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) AVURLAsset *asset;
@@ -17,6 +19,11 @@
 @property (nonatomic, strong) AVPlayerLayer *playLayer;
 @property (nonatomic, strong) MResourceLoader *loader;
 @property (weak, nonatomic) IBOutlet UISlider *slider;
+@property (nonatomic, assign) MRRange range;
+@property (nonatomic, assign) NSUInteger receiveDataLength;
+@property (nonatomic, strong) NSMutableSet *set;
+@property (nonatomic, strong) NSMutableArray *array;
+@property (nonatomic, strong) NSMutableDictionary *dic;
 @end
 
 @implementation ViewController
@@ -24,16 +31,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self _configVideoPlayer];
-    [self _addTimeObserver];
-    [self.player play];
+    self.receiveDataLength = 0;
+    self.set = [NSMutableSet set];
 }
 
 - (void)_configVideoPlayer {
-    // https://media.w3.org/2010/05/sintel/trailer.mp4
-    // http://yun.it7090.com/video/XHLaunchAd/video03.mp4
-    // http://www.w3school.com.cn/example/html5/mov_bbb.mp4
-    NSURL *url = [NSURL URLWithString:@"https://media.w3.org/2010/05/sintel/trailer.mp4"];
+//    NSURL *url = [NSURL URLWithString:@"https://media.w3.org/2010/05/sintel/trailer.mp4"];
+//    NSURL *url = [NSURL URLWithString:@"http://yun.it7090.com/video/XHLaunchAd/video03.mp4"];
+    NSURL *url = [NSURL URLWithString:@"http://www.w3school.com.cn/example/html5/mov_bbb.mp4"];
+
     url = [MResourceScheme mrSchemeURL:url];
     self.asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     self.loader = [MResourceLoader new];
@@ -43,6 +49,7 @@
     self.player = [AVPlayer playerWithPlayerItem:self.playitem];
     self.playLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     self.playLayer.frame = CGRectMake(0, 100, self.view.bounds.size.width, 400);
+    self.playLayer.backgroundColor = [UIColor blackColor].CGColor;
     [self.view.layer addSublayer:self.playLayer];
 }
 
@@ -64,11 +71,17 @@
 }
 
 - (IBAction)play:(id)sender {
+    [self _configVideoPlayer];
+    [self _addTimeObserver];
     [self.player play];
 }
 
 - (IBAction)stop:(id)sender {
     [self.player pause];
+}
+
+- (IBAction)clearCache:(id)sender {
+    [[MResourceCacheManager defaultManager] clearAllCache];
 }
 
 /**
