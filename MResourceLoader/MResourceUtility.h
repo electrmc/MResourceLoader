@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define MPAsset(obj,desc,returnValue) if(!obj){ NSAssert(0, desc);return (returnValue);}
+#define MRAsset(obj,desc,returnValue) if(!obj){ NSAssert(0, desc);return (returnValue);}
 
 #define MRDEBUG
 

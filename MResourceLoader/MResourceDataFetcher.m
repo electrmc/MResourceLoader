@@ -12,6 +12,7 @@
 #import "MResourceDataFetcher.h"
 #import "MResourceSessionManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "MResourceCacheManager.h"
 
 @interface MResourceDataFetcher()
 @property (nonatomic, strong, readonly) NSURL *url;
@@ -103,12 +104,14 @@
         return nil;
     }
     
-    NSUInteger expectDataLength = MRMaxRange(self.originRange) - self.currentOffset;
-    NSUInteger unreadDataLength = MIN(self.receiveData.length, expectDataLength);
+    MRLong expectDataLength = MRMaxRange(self.originRange) - self.currentOffset;
+    NSUInteger unreadDataLength = MIN(self.receiveData.length, (NSUInteger)expectDataLength);
     NSRange range = NSMakeRange(0, unreadDataLength);
     NSData *reslutData = [self.receiveData subdataWithRange:range];
     NSError *error = nil;
+    
     [self.cacher setCacheData:reslutData range:MRMakeRange(self.currentOffset, unreadDataLength) error:&error];
+    [[MResourceCacheManager defaultManager] clearAllCache];
     NSAssert(!error, @"Error : fetcher cache data error");
     self.currentOffset += unreadDataLength;
     [self.receiveData replaceBytesInRange:range withBytes:NULL length:0];

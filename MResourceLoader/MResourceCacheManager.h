@@ -11,14 +11,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MResourceCacheManager : NSObject
+@protocol MResourceCacheFileManagerDelegate <NSObject>
+- (BOOL)shouldDeleteFileInPath:(NSString*)filePath;
+@end
 
+@interface MResourceCacheManager : NSObject
 /**
  @abstract default is 'sandbox directory'/Documents/MResourceCache
- @discussion cachePath is cache file's root path.
+ @discussion cachePath is cache folder root path.
  every url resource has a sub folder in cachePath.
  setFolderPath: can change it
- @result all cache file's root directory
+ @result cache file's root path
  */
 @property (nonatomic, copy, readonly) NSString *cachePath;
 
@@ -31,7 +34,25 @@
  */
 @property (nonatomic, assign, readonly) NSUInteger currentDiskUsage;
 
+/**
+ @abstract Returns the maxDiskUsage, This size, measured in bytes.
+ @discussion Change 'maxDiskUsage' will trigger 'clearInvalidCache'
+ */
+@property (nonatomic, assign) NSUInteger maxDiskUsage;
+
+/**
+ The maximum length of time to keep an file in the disk cache, in seconds.
+ Setting this to a negative value means no expiring.
+ Setting this to zero means that all cached files would be removed when do expiration check.
+ Defaults to 1 weak.
+ */
+@property (assign, nonatomic) NSTimeInterval maxCacheAge;
+
 + (instancetype)defaultManager;
+
+- (void)registerFileHandler:(id<MResourceCacheFileManagerDelegate>)fileHandler;
+
+- (void)unregisterFileHandler:(id<MResourceCacheFileManagerDelegate>)fileHandler;;
 
 /**
  Set video cache folder path, this will change cachePath;
@@ -41,8 +62,24 @@
  */
 - (void)setFolderPath:(NSString*)filePath;
 
+/**
+ If diskusage exceed maxDiskUsage, this method will clear older cache file.
+ The using file cannot be deleted.
+ @return if clear file return YES, otherwise return NO
+ */
+- (BOOL)clearInvalidCache;
+
+/**
+ This method will clear all cache file.
+ The using file cannot be deleted.
+ @return if clear file return YES, otherwise return NO
+ */
 - (BOOL)clearAllCache;
 
+/**
+ Delete cache file for url.
+ The using file cannot be deleted.
+ @return if clear file return YES, otherwise return NO
+ */
 - (BOOL)clearCacheForURL:(NSString*)url;
-
 @end

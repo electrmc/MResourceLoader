@@ -35,7 +35,7 @@ static NSString * const RangesCacheFile = @"RangesCacheFile";
 }
 @end
 
-@interface MResourceFileHandler()
+@interface MResourceFileHandler()<MResourceCacheFileManagerDelegate>
 @property (nonatomic, strong, readonly) NSURL *url;
 @property (nonatomic, strong, readonly) NSLock *lock;
 
@@ -58,6 +58,7 @@ static NSString * const RangesCacheFile = @"RangesCacheFile";
         _folderPath = [tempFolder stringByAppendingPathComponent:[url.absoluteString mr_md5]];
         [self _configFileHandler];
         [self _unarchiveInfo];
+        [[MResourceCacheManager defaultManager] registerFileHandler:self];
     }
     return self;
 }
@@ -140,6 +141,15 @@ static NSString * const RangesCacheFile = @"RangesCacheFile";
 - (void)_unarchiveInfo {
     _contentInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:self.contentInfoPath];
     _ranges = [NSKeyedUnarchiver unarchiveObjectWithFile:self.rangesPath];
+}
+
+#pragma mark - MResourceCacheFileManagerDelegate
+- (BOOL)shouldDeleteFileInPath:(NSString*)filePath {
+    if ([[self.folderPath lastPathComponent] isEqualToString:[filePath lastPathComponent]]) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 #pragma mark - Get Method
