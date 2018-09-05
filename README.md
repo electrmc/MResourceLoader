@@ -19,7 +19,8 @@ self.player = [AVPlayer playerWithPlayerItem:self.playitem];
 ```
 ### Contact
 
-miaochaomc@163.com
+miaochaomc@163.com  
+
 miaochaomc@gmail.com
 
 ### License
