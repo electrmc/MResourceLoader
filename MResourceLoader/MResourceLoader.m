@@ -22,7 +22,6 @@
 
 #pragma mark - AVAssetResourceLoaderDelegate
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest NS_AVAILABLE(10_9, 6_0) {
-    MRLog(@"new loadingRequest: %@",loadingRequest);
     NSURL *url = [MResourceScheme originURL:loadingRequest.request.URL];
     MRAsset(url, @"Error: resourloader url is nil!", NO);
     MResourceDataFiller *dataFiller = [self _dataFillerForLoadRequest:loadingRequest];
@@ -31,7 +30,6 @@
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest NS_AVAILABLE(10_9, 7_0) {
-    MRLog(@"system cancel loadingRequest: %@",loadingRequest);
     MResourceDataFiller *dataFiller = [self _dataFillerForLoadRequest:loadingRequest];
     [dataFiller cancel];
     [self.pendingLoaders removeObjectForKey:@(loadingRequest.hash)];

@@ -36,7 +36,7 @@
 }
 
 - (void)startCreateDataInRange:(MRRange)range {
-    MRLog(@"fetcher start : %lu range : %lld , %lu",(unsigned long)self.hash,range.location,(unsigned long)range.length);
+    MRLog(@"MResource: fetcher start range : %lld , %lu",range.location,(unsigned long)range.length);
     _originRange = range;
     self.currentOffset = range.location;
     MResourceSessionManager *sessionManager = [MResourceSessionManager shareSession];
@@ -112,7 +112,7 @@
     
     [self.cacher setCacheData:reslutData range:MRMakeRange(self.currentOffset, unreadDataLength) error:&error];
     [[MResourceCacheManager defaultManager] clearAllCache];
-    NSAssert(!error, @"Error : fetcher cache data error");
+    NSAssert(!error, @"MResource Error : fetcher cache data error");
     self.currentOffset += unreadDataLength;
     [self.receiveData replaceBytesInRange:range withBytes:NULL length:0];
     return reslutData;
@@ -122,13 +122,12 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error {
     if (self.receiveData.length > 0) {
-        NSLog(@"fetcher currentOffset : %lld, remained data  length : %ld",self.currentOffset, self.receiveData.length);
         NSError *cacheerror = nil;
         [self.cacher setCacheData:self.receiveData
                             range:MRMakeRange(self.currentOffset, self.receiveData.length)
                             error:&cacheerror];
         
-        NSAssert(!cacheerror,@"Error : fetcher cache data error on finish");
+        NSAssert(!cacheerror,@"MResource Error : fetcher cache data error on finish");
     }
     if ([self.delegate respondsToSelector:@selector(dataCreator:didFinishWithError:)]) {
         [self.delegate dataCreator:self didFinishWithError:error];

@@ -28,10 +28,19 @@ static NSString * const ResourceCacheDirName = @"/MResourceCache/";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
-        [instance setFolderPath:[NSHomeDirectory() stringByAppendingString:RelativeFilePath]];
-        instance.handlerSet = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory capacity:0];
     });
     return instance;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.maxDiskUsage = 1024 * 1 * 1; // 100M
+        self.maxCacheAge = 60 * 60 * 24 *7;    // A Weak
+        self.handlerSet = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory capacity:0];
+        [self setFolderPath:[NSHomeDirectory() stringByAppendingString:RelativeFilePath]];
+    }
+    return self;
 }
 
 - (void)setFolderPath:(NSString*)filePath {
@@ -52,7 +61,7 @@ static NSString * const ResourceCacheDirName = @"/MResourceCache/";
     [self.handlerSet removeObject:fileHandler];
 }
 
-- (BOOL)clearInvalidCache {
+- (BOOL)clearOlderCache {
     NSArray<NSString *> *resourceKeys = @[NSURLIsDirectoryKey,
                                           NSURLContentAccessDateKey,
                                           NSURLContentModificationDateKey];
@@ -183,7 +192,7 @@ static NSString * const ResourceCacheDirName = @"/MResourceCache/";
     NSError *error = nil;
     BOOL suc = [fileManager removeItemAtPath:filePath error:&error];
     if (!suc || error) {
-        MRLog(@"delet cache : %@",error);
+        MRLog(@"MResource: delet cache : %@",error);
     }
     [lock unlock];
     return suc;
@@ -216,7 +225,7 @@ static NSString * const ResourceCacheDirName = @"/MResourceCache/";
         }
         return folderSize;
     } else {
-        MRLog(@"file is not exist");
+        MRLog(@"MResource: file is not exist");
         return 0;
     }
 }
@@ -228,7 +237,7 @@ static NSString * const ResourceCacheDirName = @"/MResourceCache/";
         unsigned long long fileSize = [[fileManager attributesOfItemAtPath:filePath error:nil] fileSize];
         return fileSize;
     } else {
-        MRLog(@"file is not exist");
+        MRLog(@"MResource: file is not exist");
         return 0;
     }
 }

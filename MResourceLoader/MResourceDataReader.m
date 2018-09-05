@@ -37,6 +37,7 @@ static NSUInteger MaxDataFragmentLength = 204800;
 }
 
 - (void)startCreateDataInRange:(MRRange)range {
+    MRLog(@"MResource: reader start range : %lld , %lu",range.location,(unsigned long)range.length);
     [self stop];
     
     _originRange = range;
@@ -72,10 +73,9 @@ static NSUInteger MaxDataFragmentLength = 204800;
         NSError *error = nil;
         NSData *data = [self.cacher cacheDataWithRange:MRMakeRange(self.currentOffset, unreadDataLength) error:&error];
         if (data.length != unreadDataLength) {
-            NSAssert(0, @"Error : data reader read data length is unexpected");
+            NSAssert(0, @"MResource Error : data reader read data length is unexpected");
             [self _finishWithError:error];
         }
-        MRLog(@"did read data : %ld",data.length);
         if ([self.delegate respondsToSelector:@selector(dataCreator:didCreateData:)]) {
             [self.delegate dataCreator:self didCreateData:data];
         }

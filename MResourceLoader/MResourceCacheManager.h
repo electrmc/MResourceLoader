@@ -17,26 +17,21 @@
 
 @interface MResourceCacheManager : NSObject
 /**
- @abstract default is 'sandbox directory'/Documents/MResourceCache
- @discussion cachePath is cache folder root path.
- every url resource has a sub folder in cachePath.
- setFolderPath: can change it
- @result cache file's root path
+ 'cachePath' is cache folder root path. Every url's resource has a sub folder in cachePath.
+ 'setFolderPath:' can change it.
+ Default is 'sandbox directory'/Documents/MResourceCache
  */
 @property (nonatomic, copy, readonly) NSString *cachePath;
 
 /**
- @abstract Returns the current amount of space consumed by the
- on-disk cache of all cache file.
- @discussion This size, measured in bytes, indicates the current
- usage of the on-disk cache.
- @result the current usage of the on-disk cache of all cache file.
+ Returns the current amount of space consumed by the on-disk cache of all cache file.
+ This size, measured in bytes.
  */
 @property (nonatomic, assign, readonly) NSUInteger currentDiskUsage;
 
 /**
- @abstract Returns the maxDiskUsage, This size, measured in bytes.
- @discussion Change 'maxDiskUsage' will trigger 'clearInvalidCache'
+ Returns the maxDiskUsage, This size, measured in bytes.
+ Change 'maxDiskUsage' can trigger 'clearInvalidCache'
  */
 @property (nonatomic, assign) NSUInteger maxDiskUsage;
 
@@ -67,7 +62,7 @@
  The using file cannot be deleted.
  @return if clear file return YES, otherwise return NO
  */
-- (BOOL)clearInvalidCache;
+- (BOOL)clearOlderCache;
 
 /**
  This method will clear all cache file.

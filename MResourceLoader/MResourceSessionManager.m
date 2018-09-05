@@ -77,7 +77,6 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    MRLog(@"did receive data : %ld",data.length);
     id<NSURLSessionDataDelegate>delegate = [self _delegateForTask:dataTask];
     if ([delegate respondsToSelector:@selector(URLSession:dataTask:didReceiveData:)]) {
         [delegate URLSession:session dataTask:dataTask didReceiveData:data];
