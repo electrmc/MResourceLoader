@@ -1,16 +1,21 @@
 //
 //  MResourceUtility.h
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
 //
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
+//
 
 #import <Foundation/Foundation.h>
 
-#define MPAsset(obj,desc,returnValue) if(!obj){ NSAssert(0, desc);return (returnValue);}
+#define MRAsset(obj,desc,returnValue) if(!obj){ NSAssert(0, desc);return (returnValue);}
 
-#ifdef MRDEBUG
+#define MRDEBUG
+
+#if defined (MRDEBUG) && defined (DEBUG)
     #define MRLog(...) NSLog(__VA_ARGS__)
 #else
     #define MRLog(...)

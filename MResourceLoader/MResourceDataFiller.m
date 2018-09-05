@@ -1,9 +1,12 @@
 //
 //  MResourceDataFiller.m
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
+//
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
 //
 
 #import "MResourceDataFiller.h"
@@ -11,6 +14,7 @@
 #import "MResourceDataFetcher.h"
 #import "MResourceContentInfo.h"
 #import "MResourceScheme.h"
+#import "MResourceCacheManager.h"
 
 @interface MResourceDataFiller()
 @property (nonatomic, strong) NSMutableArray<MResourceDataCreator*> *pendingDataCreators;
@@ -24,6 +28,11 @@
     [self.pendingDataCreators enumerateObjectsUsingBlock:^(MResourceDataCreator * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj stop];
     }];
+    
+    MResourceCacheManager *cacheManager = [MResourceCacheManager defaultManager];
+    if (cacheManager.currentDiskUsage > cacheManager.maxDiskUsage) {
+        [cacheManager clearOlderCache];
+    }
 }
 
 - (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest*)loadingRequest {
@@ -105,12 +114,10 @@
         contentInformationRequest.contentLength = [contentInfo.contentLength longLongValue];
         contentInformationRequest.byteRangeAccessSupported = contentInfo.byteRangeAccessSupported;
         [self.cacher cacheContentInfo:contentInfo];
-        MRLog(@"did fill content info : %lld",contentInformationRequest.contentLength);
     }
 }
 
 - (void)_finishFillWithError:(NSError*)error {
-    MRLog(@"loadingRequest finish : %ld",self.loadingRequest);
     if (self.loadingRequest.isFinished) {
         return;
     }
@@ -127,7 +134,6 @@
 }
 
 - (void)dataCreator:(MResourceDataCreator *)creator didCreateData:(NSData *)data {
-    MRLog(@"fill data length : %ld",data.length);
     if (data.length > 0) {
         [self.loadingRequest.dataRequest respondWithData:data];
     }

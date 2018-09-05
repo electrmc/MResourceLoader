@@ -1,14 +1,18 @@
 //
 //  MResourceDataFetcher.m
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
+//
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
 //
 
 #import "MResourceDataFetcher.h"
 #import "MResourceSessionManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "MResourceCacheManager.h"
 
 @interface MResourceDataFetcher()
 @property (nonatomic, strong, readonly) NSURL *url;
@@ -32,13 +36,13 @@
 }
 
 - (void)startCreateDataInRange:(MRRange)range {
-    MRLog(@"fetcher start : %ld range : %lld , %ld",self.hash,range.location,range.length);
+    MRLog(@"MResource: fetcher start range : %lld , %lu",range.location,(unsigned long)range.length);
     _originRange = range;
     self.currentOffset = range.location;
     MResourceSessionManager *sessionManager = [MResourceSessionManager shareSession];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
     request.timeoutInterval = 10.f;
-    
+    request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
     if (range.length > 0) {
         [request addValue:[NSString stringWithFormat:@"bytes=%ld-%ld",(unsigned long)range.location, (unsigned long)MRMaxRange(range)] forHTTPHeaderField:@"Range"];
     }
@@ -85,7 +89,7 @@
     }
     
     MResourceContentInfo *info=  [[MResourceContentInfo alloc]init];
-    info.contentLength = [NSString stringWithFormat:@"%ld",videoLength];
+    info.contentLength = [NSString stringWithFormat:@"%lu",(unsigned long)videoLength];
     info.contentType = CFBridgingRelease(contentType);
     info.byteRangeAccessSupported = YES;
     return info;
@@ -100,13 +104,15 @@
         return nil;
     }
     
-    NSUInteger expectDataLength = MRMaxRange(self.originRange) - self.currentOffset;
-    NSUInteger unreadDataLength = MIN(self.receiveData.length, expectDataLength);
+    MRLong expectDataLength = MRMaxRange(self.originRange) - self.currentOffset;
+    NSUInteger unreadDataLength = MIN(self.receiveData.length, (NSUInteger)expectDataLength);
     NSRange range = NSMakeRange(0, unreadDataLength);
     NSData *reslutData = [self.receiveData subdataWithRange:range];
     NSError *error = nil;
+    
     [self.cacher setCacheData:reslutData range:MRMakeRange(self.currentOffset, unreadDataLength) error:&error];
-    NSAssert(!error, @"Error : fetcher cache data error");
+    [[MResourceCacheManager defaultManager] clearAllCache];
+    NSAssert(!error, @"MResource Error : fetcher cache data error");
     self.currentOffset += unreadDataLength;
     [self.receiveData replaceBytesInRange:range withBytes:NULL length:0];
     return reslutData;
@@ -116,13 +122,12 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error {
     if (self.receiveData.length > 0) {
-        NSLog(@"fetcher currentOffset : %lld, remained data  length : %ld",self.currentOffset, self.receiveData.length);
         NSError *cacheerror = nil;
         [self.cacher setCacheData:self.receiveData
                             range:MRMakeRange(self.currentOffset, self.receiveData.length)
                             error:&cacheerror];
         
-        NSAssert(!cacheerror,@"Error : fetcher cache data error on finish");
+        NSAssert(!cacheerror,@"MResource Error : fetcher cache data error on finish");
     }
     if ([self.delegate respondsToSelector:@selector(dataCreator:didFinishWithError:)]) {
         [self.delegate dataCreator:self didFinishWithError:error];

@@ -1,9 +1,12 @@
 //
 //  MResourceCacher.m
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
+//
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
 //
 
 #import "MResourceCacher.h"
@@ -44,7 +47,7 @@
         MRRange range = [self.ranges[i] MRRange];
         if (range.location == MRRANGE_UNDEFINE &&
             range.length == MRRANGE_UNDEFINE) {
-            NSAssert(0, @"Error : Cacher ranges is error");
+            NSAssert(0, @"MResource Error : Cacher ranges is error");
             continue;
         }
         if (MRMaxRange(fillDataRange) > range.location &&
@@ -59,7 +62,7 @@
 
 - (void)setCacheData:(NSData*)data range:(MRRange)range error:(NSError**)error {
     if (data.length != range.length) {
-        NSAssert(0, @"Error : cache data length is error");
+        NSAssert(0, @"MResource Error : cache data length is error");
         return;
     }
     BOOL suc = [self.fileHandler writeData:data range:range error:error];
@@ -81,7 +84,7 @@
     while (count < self.ranges.count) {
         MRRange rangeTemp = [self.ranges[count] MRRange];
         if (rangeTemp.location == MRRANGE_UNDEFINE && rangeTemp.length == MRRANGE_UNDEFINE) {
-            NSAssert(0, @"Error : cacher insert range error");
+            NSAssert(0, @"MResource Error : cacher insert range error");
             return;
         }
         if (rangeTemp.location > range.location) {

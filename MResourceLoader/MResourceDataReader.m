@@ -1,9 +1,12 @@
 //
 //  MResourceDataReader.m
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
+//
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
 //
 
 #import "MResourceDataReader.h"
@@ -34,6 +37,7 @@ static NSUInteger MaxDataFragmentLength = 204800;
 }
 
 - (void)startCreateDataInRange:(MRRange)range {
+    MRLog(@"MResource: reader start range : %lld , %lu",range.location,(unsigned long)range.length);
     [self stop];
     
     _originRange = range;
@@ -69,10 +73,9 @@ static NSUInteger MaxDataFragmentLength = 204800;
         NSError *error = nil;
         NSData *data = [self.cacher cacheDataWithRange:MRMakeRange(self.currentOffset, unreadDataLength) error:&error];
         if (data.length != unreadDataLength) {
-            NSAssert(0, @"Error : data reader read data length is unexpected");
+            NSAssert(0, @"MResource Error : data reader read data length is unexpected");
             [self _finishWithError:error];
         }
-        
         if ([self.delegate respondsToSelector:@selector(dataCreator:didCreateData:)]) {
             [self.delegate dataCreator:self didCreateData:data];
         }

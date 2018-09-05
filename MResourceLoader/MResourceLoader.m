@@ -1,9 +1,12 @@
 //
 //  MResourceLoader.m
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
+//
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
 //
 
 #import "MResourceLoader.h"
@@ -19,16 +22,14 @@
 
 #pragma mark - AVAssetResourceLoaderDelegate
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest NS_AVAILABLE(10_9, 6_0) {
-    MRLog(@"new loadingRequest: %@",loadingRequest);
     NSURL *url = [MResourceScheme originURL:loadingRequest.request.URL];
-    MPAsset(url, @"Error: resourloader url is nil!", NO);
+    MRAsset(url, @"Error: resourloader url is nil!", NO);
     MResourceDataFiller *dataFiller = [self _dataFillerForLoadRequest:loadingRequest];
     [dataFiller start];
     return YES;
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest NS_AVAILABLE(10_9, 7_0) {
-    MRLog(@"system cancel loadingRequest: %@",loadingRequest);
     MResourceDataFiller *dataFiller = [self _dataFillerForLoadRequest:loadingRequest];
     [dataFiller cancel];
     [self.pendingLoaders removeObjectForKey:@(loadingRequest.hash)];

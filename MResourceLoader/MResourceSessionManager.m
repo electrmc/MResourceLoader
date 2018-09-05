@@ -1,9 +1,12 @@
 //
 //  MResourceSessionManager.m
-//  MResourceDemo
+//  MResourceLoader
 //
 //  Created by MiaoChao on 2018/8/22.
 //  Copyright © 2018年 MiaoChao. All rights reserved.
+//
+//  This source code is licensed under the MIT-style license found in the
+//  LICENSE file in the root directory of this source tree.
 //
 
 #import "MResourceSessionManager.h"
@@ -74,7 +77,6 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    MRLog(@"did receive data : %ld",data.length);
     id<NSURLSessionDataDelegate>delegate = [self _delegateForTask:dataTask];
     if ([delegate respondsToSelector:@selector(URLSession:dataTask:didReceiveData:)]) {
         [delegate URLSession:session dataTask:dataTask didReceiveData:data];
